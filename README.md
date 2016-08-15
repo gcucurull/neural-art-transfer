@@ -43,7 +43,7 @@ To use the script it is needed:
 ## Examples
 
 ![input image](input/1-content.jpg)
-![out image](output/1-output.jpg)
+![out image](output/1-output-new.jpg)
 
 
 ## To Do
