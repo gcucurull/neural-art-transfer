@@ -88,9 +88,6 @@ ENV/
 # Rope project settings
 .ropeproject
 
-*.jpg
-*.png
-
 models/*.npy
 models/*.npz
 *.npy
