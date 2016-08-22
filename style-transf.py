@@ -3,7 +3,7 @@ import numpy as np
 import tensorflow as tf
 from models import alexnet
 from models import vgg
-from argparse import ArgumentParser
+import argparse
 import losses
 
 network_model = vgg
@@ -11,10 +11,26 @@ network_model = vgg
 input_content = 'input/1-content.jpg'
 input_style = 'styles/1-style.jpg'
 
-def load_image(img_path):
+def imshape(t):
+    try:
+        x, y = map(int, t.split(','))
+        return x, y
+    except:
+        raise argparse.ArgumentTypeError("Image shape must be x,y")
+
+def load_image(img_path, shape=None):
     loaded = scipy.misc.imread(img_path).astype(np.float)
+
+    # grayscale to rgb
     if len(loaded.shape) == 2:
         loaded = np.dstack([loaded, loaded, loaded])
+
+    # rescale if needed
+    if shape:
+        print(loaded.shape)
+        loaded = scipy.misc.imresize(loaded, shape)
+        print(loaded.shape)
+
     return loaded
 
 def get_name(photo):
@@ -30,7 +46,7 @@ learning_rate = 1e0
 
 ITERATIONS = 1000
 
-parser = ArgumentParser()
+parser = argparse.ArgumentParser()
 parser.add_argument('--iter',
         dest='iter', help='number of iteraions', 
         default=ITERATIONS, type=int)
@@ -54,6 +70,12 @@ parser.add_argument('--style_w',
 parser.add_argument('--tv_w',
         dest='tv_weight', help='tv weight', 
         default=tv_weight, type=float)
+parser.add_argument('--cont_size',
+        dest='cont_size', help="New size for content image",
+        default=None, type=imshape)
+parser.add_argument('--style_size',
+        dest='style_size', help="New size for style image",
+        default=None, type=imshape)
 
 options = parser.parse_args()
 
@@ -66,7 +88,7 @@ else:
 
 style_weight_layer = options.style_weight/len(S_LAYERS)
 
-content = load_image(options.cont)
+content = load_image(options.cont, options.cont_size)
 style = load_image(options.style)
 
 # compute layer activations for content
