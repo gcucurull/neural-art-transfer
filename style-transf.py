@@ -11,6 +11,12 @@ network_model = vgg
 input_content = 'input/1-content.jpg'
 input_style = 'styles/1-style.jpg'
 
+def load_image(img_path):
+    loaded = scipy.misc.imread(img_path).astype(np.float)
+    if len(loaded.shape) == 2:
+        loaded = np.dstack([loaded, loaded, loaded])
+    return loaded
+
 def get_name(photo):
     return photo.split('/')[1].split('.')[0]
 
@@ -60,8 +66,8 @@ else:
 
 style_weight_layer = options.style_weight/len(S_LAYERS)
 
-content = scipy.misc.imread(options.cont).astype(np.float)
-style = scipy.misc.imread(options.style).astype(np.float)
+content = load_image(options.cont)
+style = load_image(options.style)
 
 # compute layer activations for content
 g = tf.Graph()
@@ -87,7 +93,6 @@ with g.as_default(), g.device('/gpu:0'), tf.Session() as sess:
     # white noise
     target = tf.random_normal((1,)+content.shape)
 
-    #target_pre = np.array([ network_model.preprocess(target) ])
     target_pre_var = tf.Variable(target)
 
     # build model with empty layer activations for generated target image

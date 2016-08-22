@@ -48,6 +48,4 @@ To use the script it is needed:
 
 ## To Do
 - [ ] Rescale images
-- [ ] Support for png images
-- [ ] Support for grayscale images
 - [ ] Content and style layers as arguments
