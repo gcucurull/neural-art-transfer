@@ -11,14 +11,7 @@ network_model = vgg
 input_content = 'input/1-content.jpg'
 input_style = 'styles/1-style.jpg'
 
-def imshape(t):
-    try:
-        x, y = map(int, t.split(','))
-        return x, y
-    except:
-        raise argparse.ArgumentTypeError("Image shape must be x,y")
-
-def load_image(img_path, shape=None):
+def load_image(img_path, new_size=None):
     loaded = scipy.misc.imread(img_path).astype(np.float)
 
     # grayscale to rgb
@@ -26,10 +19,15 @@ def load_image(img_path, shape=None):
         loaded = np.dstack([loaded, loaded, loaded])
 
     # rescale if needed
-    if shape:
-        print(loaded.shape)
+    if new_size:
+        h,w,c = loaded.shape
+        if h > w:
+            ratio = w/float(h)
+            shape = (new_size, int(new_size*ratio))
+        else:
+            ratio = h/float(w)
+            shape = (int(new_size*ratio), new_size)
         loaded = scipy.misc.imresize(loaded, shape)
-        print(loaded.shape)
 
     return loaded
 
@@ -71,11 +69,11 @@ parser.add_argument('--tv_w',
         dest='tv_weight', help='tv weight', 
         default=tv_weight, type=float)
 parser.add_argument('--cont_size',
-        dest='cont_size', help="New size for content image",
-        default=None, type=imshape)
+        dest='cont_size', help="Size of the largest dimension for the content image",
+        default=None, type=int)
 parser.add_argument('--style_size',
-        dest='style_size', help="New size for style image",
-        default=None, type=imshape)
+        dest='style_size', help="Size of the largest dimension for style image",
+        default=None, type=int)
 
 options = parser.parse_args()
 
@@ -89,7 +87,7 @@ else:
 style_weight_layer = options.style_weight/len(S_LAYERS)
 
 content = load_image(options.cont, options.cont_size)
-style = load_image(options.style)
+style = load_image(options.style, options.style_size)
 
 # compute layer activations for content
 g = tf.Graph()

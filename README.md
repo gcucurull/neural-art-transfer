@@ -49,5 +49,5 @@ To use the script it is needed:
 
 
 ## To Do
-- [ ] Improve the rescaling of the images (giving only the new size of the larger dimension and resizing the other accordingly)
-- [ ] Content and style layers as arguments
+- [ ] Content and style layers as arguments 
+- [ ] Select model (VGG and Alexnet)
