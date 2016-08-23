@@ -32,8 +32,8 @@ The available params for the script are the following ones:
 - **--cont_w**: Weight of the content loss. Default 1e0
 - **--style_w**: Weight for the style loss. Default 1e3
 - **--tv_w**: Weight for the total variation loss. Default 0
-- **--cont_size**: Resize the content image to the given size. Note that the output mage will have the same size as the content image. Default None
-- **--style_size**: Resize the style image to the given size. Default None
+- **--cont_size**: Set the larger dimension of the content image to the given size. The other dimension is resized accordingly. Note that the output mage will have the same size as the content image. Default None
+- **--style_size**: Set the larger dimension of the style image to the given size. The other dimension is resized accordingly. Default None
 
 
 ## Dependencies
