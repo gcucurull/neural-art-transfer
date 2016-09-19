@@ -119,9 +119,9 @@ with g.as_default(), g.device('/gpu:0'), tf.Session() as sess:
     model = network_model.get_model(target_pre_var)
 
     # compute loss
-    cont_cost = losses.content_loss(content_out, model, C_LAYER, content_weight)
+    cont_cost = losses.content_loss(content_out, model, C_LAYER, options.content_weight)
     style_cost = losses.style_loss(style_out, model, S_LAYERS, style_weight_layer)
-    tv_cost = losses.total_var_loss(target_pre_var, tv_weight)
+    tv_cost = losses.total_var_loss(target_pre_var, options.tv_weight)
 
     total_loss = cont_cost + tf.add_n(style_cost) + tv_cost
     # total_loss = tf.add_n(tf.get_collection('losses'), name='total_loss')
